@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Melee1MW.unity
     guid: 6d6dc44586b4c9c48b3c8e1ab36d4857
+  - enabled: 1
+    path: Assets/SecondLevel.unity
+    guid: f02e4fcc81819f846a1bfd4b1e1bbc76
   m_configObjects: {}
