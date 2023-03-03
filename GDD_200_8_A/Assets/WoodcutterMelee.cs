@@ -11,6 +11,15 @@ public class WoodcutterMelee : MonoBehaviour
 
     GameObject theGameManager;
     Inventory inventoryScript;
+
+    public GameObject fireballPrefab;
+    private GameObject spawnedFireball;
+    private GameObject fireballSpawnPoint;
+
+    private IEnumerator fireballSpawnDelay;
+
+    bool spawnFlag = false;
+
     void Start()
     {
         axeSwingAudioObject = GameObject.Find("AxeAudio");
@@ -19,6 +28,7 @@ public class WoodcutterMelee : MonoBehaviour
 
         theGameManager = GameObject.Find("GameManager");
         inventoryScript = theGameManager.GetComponent<Inventory>();
+        fireballSpawnPoint = GameObject.Find("ProjectileSpawnPoint");
     }
 
     // Update is called once per frame
@@ -47,8 +57,70 @@ public class WoodcutterMelee : MonoBehaviour
                 
                 Debug.Log("Fireball 1 is in inventory");
                 Debug.Log("Firing Fireball 1");
+
+                //spawn a fireball
+
+
+                if (spawnFlag == false)
+                {
+                    StartCoroutine(fireballCoroutine());
+                }
+
+                
             }
 
         }
+    }
+
+    private IEnumerator fireballCoroutine()
+    {
+        //any code before the yield runs immediately on the frame it is called
+        //yield return null;
+        //any code after the yield runs on the frame after the first frame
+
+        while (true) //infinite loop, but ok with coroutine
+        {
+            yield return new WaitForSeconds(2);
+            if (spawnFlag == false)
+            {
+
+                spawnFlag = true;
+                Debug.Log("In CoRoutine. Spawning Fireball");
+
+                spawnedFireball = Instantiate(fireballPrefab, fireballSpawnPoint.transform.position, Quaternion.identity);
+                //hurl fireball
+                //runs code up to this point on first frame. Then waits 3 seconds
+                yield return new WaitForSeconds(3);
+                //after 3 seconds, picks up from here
+                Debug.Log("Fireball Away!");
+
+                Rigidbody2D fireballPhysics = spawnedFireball.GetComponent<Rigidbody2D>();
+                Vector3 fireballForce = new Vector3(10, 7, 0);
+                fireballPhysics.AddForce(fireballForce, ForceMode2D.Impulse);
+
+
+                StartCoroutine(fireballExpiration());
+
+            }
+        }
+        //coroutine doesn't actually return anything (at least in the normal sense)
+    }
+
+    private IEnumerator fireballExpiration()
+    {
+
+        yield return new WaitForSeconds(3);
+
+        Rigidbody2D fireballPhysics = spawnedFireball.GetComponent<Rigidbody2D>();
+        Vector3 fireballForce = new Vector3(-15, 8, 0);
+        fireballPhysics.AddForce(fireballForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(3);
+        Destroy(spawnedFireball);
+        spawnFlag = false;
+
+
+
+        //yield return null;
     }
 }
