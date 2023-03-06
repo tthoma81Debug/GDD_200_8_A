@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WoodcutterMelee : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class WoodcutterMelee : MonoBehaviour
     public GameObject fireballPrefab;
     private GameObject spawnedFireball;
     private GameObject fireballSpawnPoint;
+    private GameObject battleTextObject;
+    private Text battleText;
+
 
     private IEnumerator fireballSpawnDelay;
 
@@ -90,6 +94,13 @@ public class WoodcutterMelee : MonoBehaviour
                 spawnedFireball = Instantiate(fireballPrefab, fireballSpawnPoint.transform.position, Quaternion.identity);
                 //hurl fireball
                 //runs code up to this point on first frame. Then waits 3 seconds
+
+                //update ui text
+                battleTextObject = GameObject.Find("ModeText");
+                battleText = battleTextObject.GetComponent<Text>();
+
+                battleText.text = "Fireball Deployed!!!!!!!";
+
                 yield return new WaitForSeconds(3);
                 //after 3 seconds, picks up from here
                 Debug.Log("Fireball Away!");
